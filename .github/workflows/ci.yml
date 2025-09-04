@@ -1,0 +1,27 @@
+name: Java CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      APP_ENCRYPTION_KEY: "1234567890123456" # Defina sua chave AES aqui
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17" # Ou '8', '21', conforme seu projeto
+
+      - name: Rodar testes Maven
+        run: mvn test
