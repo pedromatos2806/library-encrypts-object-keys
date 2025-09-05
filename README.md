@@ -2,10 +2,9 @@
 
 ## Visão Geral
 
-A classe `ObjectObfuscator` permite serializar, criptografar e ofuscar objetos Java em uma string segura, e também realizar o processo inverso (descriptografar e desserializar).  
-Ideal para proteger dados sensíveis em trânsito ou armazenamento, utilizando criptografia simétrica (AES).
-
-Além disso, é possível criptografar e descriptografar apenas campos específicos do objeto, utilizando a annotation `@ResourceId` em campos do tipo `String`, `Long`, `Integer`, `BigInteger`, entre outros tipos suportados.
+A classe `ObjectObfuscator` permite criptografar, ofuscar e recuperar IDs de objetos Java, além de serializar e proteger objetos inteiros.  
+Ela utiliza criptografia simétrica (AES) e separa os IDs usando um token especial (`|*|`).  
+Você pode criptografar e descriptografar campos específicos anotados com `@ResourceId`, suportando tipos como `String`, `Long`, `Integer`, `BigInteger`, `BigDecimal` e outros.
 
 ---
 
@@ -13,8 +12,36 @@ Além disso, é possível criptografar e descriptografar apenas campos específi
 
 - Defina a variável de ambiente `APP_ENCRYPTION_KEY` com uma chave AES de 16, 24 ou 32 bytes.
 - Adicione o JAR da lib ao seu projeto e declare a dependência no `pom.xml`.
+- Adicione também a dependência do Apache Commons Lang3 (`org.apache.commons.lang3.StringUtils`).
 
-Obs.: No Java, utilizando UTF-8, cada caractere pode ocupar mais de 1 byte. Certifique-se do tamanho correto da chave.
+## Instalação
+
+No Maven:
+
+```xml
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-lang3</artifactId>
+    <version>3.14.0</version>
+</dependency>
+```
+
+---
+
+## Como funciona
+
+### 1. Criptografia de IDs
+
+- Os campos anotados com `@ResourceId` são concatenados em uma única string, separados pelo token `|*|`.
+- Essa string é criptografada usando AES e armazenada no campo `resourceId` do objeto.
+- Para decodificar, a string é descriptografada e os valores são separados novamente pelo token, sendo convertidos para o tipo original de cada campo.
+
+### 2. Criptografia de objetos inteiros
+
+- O objeto é serializado para JSON e criptografado.
+- Pode ser recuperado usando o método de decodificação, informando a classe original.
+
+---
 
 ## Exemplo de Uso
 
@@ -34,51 +61,63 @@ set APP_ENCRYPTION_KEY=sua-chave-aqui-16ou24ou32bytes
 
 ---
 
-### 2. Serializar e criptografar um objeto inteiro
-
-```java
-import idhash.ObjectObfuscator;
-
-Usuario usuario = new Usuario("Maria", "maria@email.com");
-String seguro = ObjectObfuscator.encode(usuario);
-// seguro agora é uma String criptografada e ofuscada
-```
-
----
-
-### 3. Descriptografar e desserializar
-
-```java
-Usuario usuarioOriginal = ObjectObfuscator.decode(seguro, Usuario.class);
-```
-
----
-
-### 4. Criptografar apenas campos anotados com @ResourceId
+### 2. Criptografar e recuperar IDs
 
 ```java
 import idhash.ObjectObfuscator;
 import idhash.ResourceId;
+import java.math.BigInteger;
 
-public class Usuario {
+public class Usuario extends ObjectObfuscator {
     @ResourceId
     private Long id;
     @ResourceId
     private String codigo;
+    @ResourceId
+    private BigInteger numeroGrande;
     private String nome;
-    // getters/setters
+
+    public Usuario(Long id, String codigo, BigInteger numeroGrande, String nome) {
+        this.id = id;
+        this.codigo = codigo;
+        this.numeroGrande = numeroGrande;
+        this.nome = nome;
+    }
 }
 
-Usuario usuario = new Usuario();
-usuario.setId(123L);
-usuario.setCodigo("ABC123");
-usuario.setNome("Maria");
+// Criptografar os IDs
+Usuario usuario = new Usuario(123L, "ABC123", new BigInteger("987654321"), "Maria");
+usuario.encode();
+String resourceIdCriptografado = usuario.getResourceId();
 
-// Criptografa apenas os campos anotados
-ObjectObfuscator.encodeResourceIds(usuario);
+// Recuperar os IDs originais
+Usuario usuarioRestaurado = new Usuario(null, null, null, null);
+usuarioRestaurado.setResourceId(resourceIdCriptografado);
+usuarioRestaurado.decode();
+// Agora os campos id, codigo e numeroGrande estão restaurados
+```
 
-// Descriptografa apenas os campos anotados
-ObjectObfuscator.decodeResourceIds(usuario);
+---
+
+### 3. Criptografar e recuperar um objeto inteiro
+
+```java
+Usuario usuario = new Usuario(123L, "ABC123", new BigInteger("987654321"), "Maria");
+String seguro = ObjectObfuscator.encrypt(usuario.toString()); // ou use ObjectObfuscator.encode(usuario) se implementar toJson
+
+// Para recuperar, use:
+String original = ObjectObfuscator.decrypt(seguro);
+```
+
+---
+
+### 4. Criptografar e recuperar uma string de IDs concatenados
+
+```java
+String idsConcatenados = "123|*|ABC123|*|987654321|*|";
+String criptografado = ObjectObfuscator.encrypt(idsConcatenados);
+String decodificado = ObjectObfuscator.decrypt(criptografado);
+// decodificado == idsConcatenados
 ```
 
 ---
@@ -87,44 +126,22 @@ ObjectObfuscator.decodeResourceIds(usuario);
 
 - Se a variável `APP_ENCRYPTION_KEY` não estiver definida ou for inválida, será lançada uma exceção.
 - O algoritmo utilizado é AES/CBC/PKCS5Padding.
-- O objeto é convertido para JSON antes da criptografia (usa Gson).
-- Campos anotados com `@ResourceId` podem ser dos tipos: `String`, `Long`, `Integer`, `BigInteger`, entre outros suportados.
+- Os campos anotados com `@ResourceId` podem ser dos tipos: `String`, `Long`, `Integer`, `BigInteger`, `BigDecimal`, entre outros suportados.
+- O token separador padrão é `|*|`, mas pode ser alterado no código se necessário.
 
 ---
 
-## API
+## API Principal
 
 ```java
-public static <T> String encode(T object)
-public static <T> T decode(String encodedString, Class<T> classOfT)
-public static <T> T encodeResourceIds(T object)
-public static <T> T decodeResourceIds(T object)
-```
+public void encode(); // Criptografa os campos anotados e preenche resourceId
+public void decode(); // Descriptografa resourceId e restaura os campos anotados
 
----
+public String getResourceId(); // Retorna o valor criptografado dos IDs
+public void setResourceId(String resourceId); // Define o valor criptografado para decodificação
 
-## Exemplo Completo
-
-```java
-import idhash.ObjectObfuscator;
-import idhash.ResourceId;
-
-public class Main {
-    public static void main(String[] args) {
-        Pessoa pessoa = new Pessoa("João", 30);
-        String ofuscado = ObjectObfuscator.encode(pessoa);
-
-        System.out.println("String segura: " + ofuscado);
-
-        Pessoa recuperada = ObjectObfuscator.decode(ofuscado, Pessoa.class);
-        System.out.println("Nome: " + recuperada.getNome());
-
-        // Exemplo com campos anotados
-        pessoa.setId(123L);
-        ObjectObfuscator.encodeResourceIds(pessoa);
-        ObjectObfuscator.decodeResourceIds(pessoa);
-    }
-}
+public static String encrypt(String idsConcatenados); // Criptografa uma string de IDs
+public static String decrypt(String encodedIds); // Descriptografa uma string de IDs
 ```
 
 ---
@@ -134,5 +151,13 @@ public class Main {
 - Nunca compartilhe sua chave de criptografia.
 - Use uma chave forte e mantenha-a protegida.
 - Recomenda-se utilizar variáveis de ambiente para armazenar a chave.
+
+---
+
+## Dicas
+
+- Para suportar tipos personalizados, adicione o tratamento no método `parseId`.
+- Para usar em herança, garanta que o método `getIdFields` percorra as superclasses corretamente.
+- Sempre trate exceções de criptografia e conversão de tipos.
 
 ---
