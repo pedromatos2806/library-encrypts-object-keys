@@ -1,17 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: idhash.ObjectObfuscatorTest
 -------------------------------------------------------------------------------
-Tests run: 4, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.851 s <<< FAILURE! -- in idhash.ObjectObfuscatorTest
-idhash.ObjectObfuscatorTest.testDecodeResourceIds -- Time elapsed: 0.800 s <<< FAILURE!
-org.opentest4j.AssertionFailedError: expected: java.lang.Long@5ddcc487<123> but was: java.lang.String@16eccb2e<123>
-	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
-	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
-	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
-	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
-	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
-	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1145)
-	at idhash.ObjectObfuscatorTest.testDecodeResourceIds(ObjectObfuscatorTest.java:57)
-	at java.lang.reflect.Method.invoke(Method.java:498)
-	at java.util.ArrayList.forEach(ArrayList.java:1259)
-	at java.util.ArrayList.forEach(ArrayList.java:1259)
-
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.641 s -- in idhash.ObjectObfuscatorTest

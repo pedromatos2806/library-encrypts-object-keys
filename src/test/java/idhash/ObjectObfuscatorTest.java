@@ -2,95 +2,89 @@ package idhash;
 
 import static com.github.stefanbirkner.systemlambda.SystemLambda.withEnvironmentVariable;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.math.BigInteger;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class ObjectObfuscatorTest {
 
-    static final String TEST_KEY = "1234567890123456"; // 16 bytes para AES-128
+	static final String TEST_KEY = "1234567890123456"; // 16 bytes para AES-128
 
-    @BeforeAll
-    static void setupEnv() {
-        System.setProperty("APP_ENCRYPTION_KEY", TEST_KEY);
-    }
-
-    static class TestModel {
-        @ResourceId
-        public String id;
-        @ResourceId
-        public String idLong; 
-        public String nome;
-    }
-
-    @Test
-    void testEncodeResourceIds() throws Exception {
-        withEnvironmentVariable("APP_ENCRYPTION_KEY", TEST_KEY)
-            .execute(() -> {
-                TestModel model = new TestModel();
-                model.id = "abc";
-                model.idLong = Long.toString(123L);
-                model.nome = "Pedro";
-
-                ObjectObfuscator.encodeResourceIds(model);
-
-                assertNotEquals("abc", model.id);
-                assertNotEquals(123L, model.idLong);
-                assertEquals("Pedro", model.nome);
-            });
-    }
-
-    @Test
-    void testDecodeResourceIds() {
-       
-    	try {
-			withEnvironmentVariable("APP_ENCRYPTION_KEY", TEST_KEY)
-			.execute(() -> {
-				TestModel model = new TestModel();
-			    model.id = "abc";
-			    model.idLong = Long.toString(123L);
-			    model.nome = "Pedro";
-
-			    ObjectObfuscator.encodeResourceIds(model);
-			    ObjectObfuscator.decodeResourceIds(model);
-
-			    assertEquals("abc", model.id);
-			    assertEquals( Long.toString(123L), model.idLong);
-			    assertEquals("Pedro", model.nome);
-			});
-		} catch (Exception e) {
-			e.printStackTrace();
+	@BeforeAll
+	static void setupEnv() {
+		System.setProperty("APP_ENCRYPTION_KEY", TEST_KEY);
+	}
+	
+	@DisplayName("Classe de teste simulando uma classe presenter com vários tipos de id's.")
+	static class TestModel  extends ObjectObfuscator {
+		@ResourceId
+		public String id;
+		
+		@ResourceId
+		public Long idLong;
+		
+		@ResourceId
+		public Integer idInt;
+		
+		@ResourceId
+		public BigInteger idBigInt;
+		
+		private TestModel() {}
+		
+		public TestModel(String id, Long idLong, Integer idInt, BigInteger idBigInt ) {
+			this.id = id;
+			this.idLong= idLong;
+			this.idInt = idInt;
+			this.idBigInt = idBigInt;
+			this.encode();
 		}
-    	
-    }
+		
+		public static TestModel valueOf(String resourceId) {
+			TestModel vm = new TestModel();
+			vm.setResourceId(resourceId);
+			vm.decode();
+			return vm;
+		}
 
-    @Test
-    void testEncode() {
-        TestModel model = new TestModel();
-        model.id = "abc";
-        model.idLong = Long.toString(123L);
-        model.nome = "Pedro";
+		public String getId() {
+			return id;
+		}
 
-        String encoded = ObjectObfuscator.encode(model);
-        assertNotNull(encoded);
-        assertNotEquals("", encoded);
-        assertNotEquals("abc", encoded);
-    }
+		public Long getIdLong() {
+			return idLong;
+		}
 
-    @Test
-    void testDecode() {
-        TestModel model = new TestModel();
-        model.id = "abc";
-        model.idLong = Long.toString(123L);
-        model.nome = "Pedro";
+		public Integer getIdInt() {
+			return idInt;
+		}
 
-        String encoded = ObjectObfuscator.encode(model);
-        TestModel decoded = ObjectObfuscator.decode(encoded, TestModel.class);
+		public BigInteger getIdBigInt() {
+			return idBigInt;
+		}
+		
+	}
+	
+	@DisplayName("Esse teste é responsável por fazer criptografia simétrica e descriptografar simulando uma classe Presenter. ")
+	@Test
+	void testEncodeAndDecodeResourceIds() throws Exception {
+		withEnvironmentVariable("APP_ENCRYPTION_KEY", TEST_KEY).execute(() -> {				
+			String id = "abc";
+			Long idLong = 123L;
+			Integer idInt = 42;
+			BigInteger idBigInt = new BigInteger("987654321");
+		
+			TestModel model = new TestModel(id, idLong, idInt, idBigInt);
+			
+			TestModel valor = TestModel.valueOf(model.getResourceId());
+			
+			assertEquals("abc", valor.getId());
+			assertEquals(123L, valor.getIdLong());
+			assertEquals(42, valor.getIdInt());
+			assertEquals(new BigInteger("987654321"),valor.getIdBigInt());
+		});
+	}
 
-        assertEquals(model.id, decoded.id);
-        assertEquals(model.idLong, decoded.idLong);
-        assertEquals(model.nome, decoded.nome);
-    }
 }
