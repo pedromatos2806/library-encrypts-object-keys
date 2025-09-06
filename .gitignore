@@ -1,0 +1,48 @@
+# Eclipse
+.classpath
+.project
+.settings/
+
+# VS Code
+.vscode/
+
+# Maven
+/target/
+mvnw*
+
+# Sistema operacional
+*.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Arquivos temporários
+*.tmp
+*.bak
+~*
+
+# Arquivos de build
+*.class
+*.jar
+*.war
+*.ear
+
+# Arquivos gerados
+/bin/
+/out/
+
+# Ignora todos os arquivos de teste e diretórios de build
+/test/
+**/test-classes/
+**/generated-test-sources/
+
+# Ignora configs de launch
+launch/
+*.launch
+
+# Mantém apenas arquivos fonte Java necessários
+!/src/main/java/**/*.java
+
+# GitHub workflows (mantém)
+!/.github/
