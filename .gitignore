@@ -68,3 +68,5 @@ surefire-reports/
 
 # List files (gerados por testes ou builds)
 *.lst
+
+**/target/
