@@ -1,48 +1,70 @@
-# Eclipse
-.classpath
-.project
-.settings/
+# Compiled class files
+*.class
 
-# VS Code
-.vscode/
+# Maven target directory
+target/
 
-# Maven
-/target/
-mvnw*
-
-# Sistema operacional
-*.DS_Store
-Thumbs.db
-
-# Logs
+# Log files
 *.log
 
-# Arquivos temporários
-*.tmp
-*.bak
-~*
-
-# Arquivos de build
-*.class
+# Package Files (JAR, WAR, EAR)
 *.jar
 *.war
 *.ear
 
-# Arquivos gerados
-/bin/
-/out/
+# Eclipse files
+.classpath
+.project
+.settings/
+bin/
 
-# Ignora todos os arquivos de teste e diretórios de build
-/test/
-**/test-classes/
-**/generated-test-sources/
+# IntelliJ IDEA files
+.idea/
+*.iml
+*.iws
+out/
 
-# Ignora configs de launch
+# NetBeans files
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# VS Code files
+.vscode/
+
+# Gradle (in case you have any gradle config by accident or mix)
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~.nib
+*.DS_Store
+Thumbs.db
+
+# Launch directory (runtime files, manually created or generated)
 launch/
-*.launch
 
-# Mantém apenas arquivos fonte Java necessários
-!/src/main/java/**/*.java
+# Test result directories (optional, based on setup)
+test-output/
+test-results/
+surefire-reports/
 
-# GitHub workflows (mantém)
-!/.github/
+# Explicitly keep the README
+!README.md
+
+
+# Compiled Java classes
+*.class
+
+# Java archives
+*.jar
+
+# List files (gerados por testes ou builds)
+*.lst
