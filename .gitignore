@@ -48,8 +48,9 @@ build/
 *.DS_Store
 Thumbs.db
 
-# Launch directory (runtime files, manually created or generated)
+# Launch directory (runtime files, manual ou gerados)
 launch/
+!launch/*.launch
 
 # Test result directories (optional, based on setup)
 test-output/
