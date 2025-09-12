@@ -128,7 +128,6 @@ public class ObjectObfuscator {
 		if (lResourceId != null) {
 			retorno = lResourceId.showValue();
 		} else {
-			// Unreachable code...
 			assert false;
 		}
 
@@ -141,14 +140,12 @@ public class ObjectObfuscator {
 			values = decode(getResourceId());
 		} catch (InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException
 				| BadPaddingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		List<Field> fields = getIdFields(getClass());
 		try {
 			decodeIds(fields, values);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		setResourceId(null);

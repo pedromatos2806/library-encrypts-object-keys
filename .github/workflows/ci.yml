@@ -21,7 +21,24 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
-          java-version: "17" # ou '8', '21', etc.
+          java-version: "17"
 
-      - name: Rodar testes Maven
+      - name: Cache do Maven
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build e empacotar JAR
+        run: mvn clean package -DskipTests -DargLine="--add-opens java.base/java.util=ALL-UNNAMED"
+
+      - name: Rodar testes
         run: mvn test -DargLine="--add-opens java.base/java.util=ALL-UNNAMED"
+
+      - name: Upload do artefato JAR
+        uses: actions/upload-artifact@v3
+        with:
+          name: my-app-jar
+          path: target/*.jar
