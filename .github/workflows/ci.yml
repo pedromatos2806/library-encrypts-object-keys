@@ -20,7 +20,7 @@ jobs:
       - name: Configurar Java
         uses: actions/setup-java@v4
         with:
-          distribution: "temurin"
+          distribution: temurin
           java-version: "17"
 
       - name: Cache do Maven
@@ -38,7 +38,7 @@ jobs:
         run: mvn test -DargLine="--add-opens java.base/java.util=ALL-UNNAMED"
 
       - name: Upload do artefato JAR
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: my-app-jar
           path: target/*.jar
