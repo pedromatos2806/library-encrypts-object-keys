@@ -1,3 +1,71 @@
+# --- Build output ---
+/target/
+
+# Maven wrapper
+/.mvn/wrapper/maven-wrapper.jar
+
+# --- IDEs ---
+# Eclipse
+/.classpath
+/.project
+/.settings/
+/.metadata/
+*.launch
+
+# IntelliJ IDEA
+/.idea/
+*.iml
+out/
+
+# VS Code
+/.vscode/
+
+# --- System files ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Logs ---
+*.log
+
+# --- Temporary files ---
+*.tmp
+*.swp
+*~
+
+# --- Test / coverage reports (under target/) ---
+# surefire and failsafe
+/target/surefire-reports/
+/target/failsafe-reports/
+
+# JaCoCo
+/target/jacoco.exec
+
+# Generated sources
+/target/generated-sources/
+/target/generated-test-sources/
+
+# Annotation processors output
+/generated-sources/
+
+# OS-specific files
+ehthumbs.db
+Icon
+
+# Environment / secrets
+.env
+.env.*
+secrets.properties
+
+# Logs and dumps
+hs_err_pid*
+
+# Ignore build IDE metadata
+.classpath
+.project
+
+# Other
+node_modules/
 # Compiled class files
 *.class
 
