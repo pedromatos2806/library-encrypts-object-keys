@@ -5,14 +5,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
+/**
+ * Annotation simples para marcar campos que participam do resourceId.
+ * Removidas dependências Jackson para evitar exigir essa biblioteca em tempo de
+ * compilação do módulo que apenas consome a annotation.
+ */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@JacksonAnnotationsInside
-@JsonInclude(Include.NON_NULL)
 public @interface ResourceId {
     boolean showValue() default false;
 }
