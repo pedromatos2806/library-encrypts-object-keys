@@ -1,0 +1,122 @@
+# Git Aliases Eficazes para Visualização de Logs
+# 
+# Para usar, adicione ao seu ~/.gitconfig ou execute:
+# git config --global include.path ~/.gitconfig-aliases
+#
+# Ou copie as linhas abaixo para o arquivo ~/.gitconfig na seção [alias]
+
+[alias]
+    # ═══════════════════════════════════════════════════════════════
+    # 📊 LOGS VISUAIS E FORMATADOS
+    # ═══════════════════════════════════════════════════════════════
+    
+    # Log visual com grafo (MAIS USADO)
+    lg = log --graph --pretty=format:'%C(yellow)%h%C(reset) - %C(cyan)%an%C(reset) %C(green)(%ar)%C(reset)%C(auto)%d%C(reset)%n%C(white)%s%C(reset)' --abbrev-commit --date=relative
+    
+    # Log detalhado com estatísticas de arquivos
+    ll = log --graph --pretty=format:'%C(yellow)%h%C(reset) - %C(cyan)%an%C(reset) %C(green)(%ar)%C(reset)%C(auto)%d%C(reset)%n%C(white)%s%C(reset)%n' --abbrev-commit --date=relative --stat
+    
+    # Log compacto em uma linha
+    ls = log --pretty=format:'%C(yellow)%h %C(cyan)%an %C(green)%ar%C(auto)%d %C(white)%s' --abbrev-commit --date=relative
+    
+    # Log com data completa
+    ld = log --pretty=format:'%C(yellow)%h %C(cyan)%an %C(green)%ad%C(auto)%d%n%C(white)%s%C(reset)' --abbrev-commit --date=format:'%Y-%m-%d %H:%M'
+    
+    # Log com mensagem completa e corpo
+    lf = log --pretty=format:'%C(yellow)commit %H%C(reset)%nAutor: %C(cyan)%an <%ae>%C(reset)%nData:  %C(green)%ad%C(reset)%C(auto)%d%C(reset)%n%n    %s%n%n%b' --date=format:'%Y-%m-%d %H:%M:%S'
+    
+    # ═══════════════════════════════════════════════════════════════
+    # 🔍 LOGS ESPECÍFICOS E FILTROS
+    # ═══════════════════════════════════════════════════════════════
+    
+    # Últimos N commits (uso: git last 10)
+    last = log -20 --graph --pretty=format:'%C(yellow)%h%C(reset) - %C(cyan)%an%C(reset) %C(green)(%ar)%C(reset)%n%C(white)%s%C(reset)' --abbrev-commit
+    
+    # Commits de hoje
+    today = log --since='midnight' --graph --pretty=format:'%C(yellow)%h%C(reset) - %C(cyan)%an%C(reset) %C(green)%H:%M%C(reset)%n%C(white)%s%C(reset)' --abbrev-commit --date=format:'%H:%M'
+    
+    # Commits desta semana
+    week = log --since='1 week ago' --graph --pretty=format:'%C(yellow)%h%C(reset) - %C(cyan)%an%C(reset) %C(green)(%ar)%C(reset)%n%C(white)%s%C(reset)' --abbrev-commit
+    
+    # Commits por autor (uso: git by-author "Nome")
+    by-author = "!f() { git log --author=\"$1\" --graph --pretty=format:'%C(yellow)%h%C(reset) - %C(green)(%ar)%C(reset)%n%C(white)%s%C(reset)' --abbrev-commit; }; f"
+    
+    # Commits que modificaram arquivo específico
+    file-log = log --follow --graph --pretty=format:'%C(yellow)%h%C(reset) - %C(cyan)%an%C(reset) %C(green)(%ar)%C(reset)%n%C(white)%s%C(reset)' --abbrev-commit --
+    
+    # ═══════════════════════════════════════════════════════════════
+    # 📈 ESTATÍSTICAS E ANÁLISES
+    # ═══════════════════════════════════════════════════════════════
+    
+    # Ranking de contribuidores
+    contributors = shortlog -sn --all --no-merges
+    
+    # Estatísticas do projeto
+    stats = "!git log --shortstat --pretty=format:'' | awk '/files? changed/ {files+=$1; inserted+=$4; deleted+=$6} END {print \"Files changed:\", files, \"Lines added:\", inserted, \"Lines deleted:\", deleted}'"
+    
+    # Commits por dia (gráfico)
+    daily = "!git log --date=short --pretty=format:'%ad' | sort | uniq -c | awk '{print $2, $1}'"
+    
+    # Tags com datas
+    tags = log --tags --simplify-by-decoration --pretty=format:'%C(yellow)%h %C(cyan)%d %C(green)%ad %C(white)%s' --date=short
+    
+    # ═══════════════════════════════════════════════════════════════
+    # 🔧 LOGS PARA DEBUG E TROUBLESHOOTING
+    # ═══════════════════════════════════════════════════════════════
+    
+    # Ver alterações em commit específico
+    show-commit = "!f() { git show --stat --pretty=format:'%C(yellow)commit %H%C(reset)%nAutor: %C(cyan)%an <%ae>%C(reset)%nData:  %C(green)%ad%C(reset)%n%n%s%n' $1; }; f"
+    
+    # Buscar em mensagens de commit
+    search = "!f() { git log --all --grep=\"$1\" --graph --pretty=format:'%C(yellow)%h%C(reset) - %C(cyan)%an%C(reset) %C(green)(%ar)%C(reset)%n%C(white)%s%C(reset)' --abbrev-commit; }; f"
+    
+    # Buscar em código alterado
+    search-code = "!f() { git log -S\"$1\" --graph --pretty=format:'%C(yellow)%h%C(reset) - %C(cyan)%an%C(reset) %C(green)(%ar)%C(reset)%n%C(white)%s%C(reset)' --abbrev-commit; }; f"
+    
+    # Ver quem modificou cada linha de um arquivo
+    blame-compact = blame -w -C -C -C
+    
+    # ═══════════════════════════════════════════════════════════════
+    # 🌳 VISUALIZAÇÃO DE BRANCHES
+    # ═══════════════════════════════════════════════════════════════
+    
+    # Árvore de todos os branches
+    tree = log --all --graph --decorate --oneline --simplify-by-decoration
+    
+    # Histórico completo com todos os branches
+    graph = log --all --graph --pretty=format:'%C(yellow)%h%C(reset) - %C(cyan)%an%C(reset) %C(green)(%ar)%C(reset)%C(auto)%d%C(reset)%n%C(white)%s%C(reset)' --abbrev-commit
+    
+    # Branches recentes
+    recent-branches = for-each-ref --sort=-committerdate --format='%(color:yellow)%(refname:short)%(color:reset) - %(color:cyan)%(authorname)%(color:reset) %(color:green)(%(committerdate:relative))%(color:reset)' refs/heads/
+    
+    # ═══════════════════════════════════════════════════════════════
+    # 🚀 RELEASE E CHANGELOG
+    # ═══════════════════════════════════════════════════════════════
+    
+    # Changelog desde última tag
+    changelog = "!git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:'- %s (%an)' --no-merges"
+    
+    # Commits entre duas tags
+    between-tags = "!f() { git log $1..$2 --pretty=format:'- %s (%an)' --no-merges; }; f"
+    
+    # ═══════════════════════════════════════════════════════════════
+    # 💡 ATALHOS ÚTEIS
+    # ═══════════════════════════════════════════════════════════════
+    
+    # Desfazer último commit (mantém mudanças)
+    undo = reset --soft HEAD~1
+    
+    # Amend sem editar mensagem
+    amend = commit --amend --no-edit
+    
+    # Status compacto
+    st = status -sb
+    
+    # Diff com palavras coloridas
+    wdiff = diff --word-diff=color
+    
+    # Mostrar branches mergeados
+    merged = branch --merged
+    
+    # Mostrar branches não mergeados
+    unmerged = branch --no-merged

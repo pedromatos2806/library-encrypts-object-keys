@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>br.com.pedromatos2806</groupId>
 	<artifactId>idhash</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>idhash</name>
 	<description>Essa biblioteca tem por objetivo criar uma base de hash para os
 		objetos</description>
