@@ -1,141 +1,44 @@
-# --- Build output ---
+
+# Maven
 /target/
+!.mvn/wrapper/maven-wrapper.jar
+**/logs/
+**/*.log
+**/*.tmp
+**/*.bak
+**/*.swp
 
-# Maven wrapper
-/.mvn/wrapper/maven-wrapper.jar
-
-# --- IDEs ---
 # Eclipse
-/.classpath
-/.project
-/.settings/
-/.metadata/
-*.launch
-
-# IntelliJ IDEA
-/.idea/
-*.iml
-out/
-
-# VS Code
-/.vscode/
-
-# --- System files ---
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# --- Logs ---
-*.log
-
-# --- Temporary files ---
-*.tmp
-*.swp
-*~
-
-# --- Test / coverage reports (under target/) ---
-# surefire and failsafe
-/target/surefire-reports/
-/target/failsafe-reports/
-
-# JaCoCo
-/target/jacoco.exec
-
-# Generated sources
-/target/generated-sources/
-/target/generated-test-sources/
-
-# Annotation processors output
-/generated-sources/
-
-# OS-specific files
-ehthumbs.db
-Icon
-
-# Environment / secrets
-.env
-.env.*
-secrets.properties
-
-# Logs and dumps
-hs_err_pid*
-
-# Ignore build IDE metadata
-.classpath
-.project
-
-# Other
-node_modules/
-# Compiled class files
-*.class
-
-# Maven target directory
-target/
-
-# Log files
-*.log
-
-# Package Files (JAR, WAR, EAR)
-*.jar
-*.war
-*.ear
-
-# Eclipse files
 .classpath
 .project
 .settings/
-bin/
+.factorypath
 
-# IntelliJ IDEA files
-.idea/
+# IntelliJ IDEA
 *.iml
-*.iws
+.idea/
 out/
 
-# NetBeans files
-nbproject/private/
-build/
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
-
-# VS Code files
+# VS Code
 .vscode/
 
-# Gradle (in case you have any gradle config by accident or mix)
-.gradle/
-build/
-!gradle/wrapper/gradle-wrapper.jar
-
-# Temporary files
-*.tmp
-*.bak
-*.swp
-*~.nib
-*.DS_Store
-Thumbs.db
-
-# Launch directory (runtime files, manual ou gerados)
-launch/
-!launch/*.launch
-
-# Test result directories (optional, based on setup)
-test-output/
-test-results/
+# Test/coverage reports
+*.exec
+*.coverage
+*.ec
+*.xml
+*.txt
+*.csv
+*.html
+jacoco.exec
+site/
 surefire-reports/
 
-# Explicitly keep the README
-!README.md
+# OS files
+.DS_Store
+Thumbs.db
 
-
-# Compiled Java classes
-*.class
-
-# Java archives
+# Others
 *.jar
-
-# List files (gerados por testes ou builds)
-*.lst
-
-**/target/
+*.war
+*.ear
